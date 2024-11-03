@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-TplAzureServiceBusWorker-e37ffb52-8555-4185-a642-4826f23d7831</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Azure.Identity" Version="1.13.1" />
+    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.18.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+    <PackageReference Include="System.Threading.Tasks.Dataflow" Version="8.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Tpl\" />
+    <None Remove="Models\" />
+    <None Remove="Services\" />
+    <None Remove="Config\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Tpl\" />
+    <Folder Include="Models\" />
+    <Folder Include="Services\" />
+    <Folder Include="Config\" />
+  </ItemGroup>
+</Project>
