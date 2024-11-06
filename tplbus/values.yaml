@@ -1,0 +1,19 @@
+replicaCount: 1
+
+image:
+  repository: 0x1d1983/tplbus
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+
+autoscaling:
+  enabled: false
+
+serviceAccount:
+  create: false

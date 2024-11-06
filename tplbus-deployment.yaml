@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tplbus
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: tplbus
+  template:
+    metadata:
+      labels:
+        app: tplbus
+    spec:
+      containers:
+      - image: 0x1d1983/tplbus:latest
+        name: tplbus
+        ports:
+        - containerPort: 80
