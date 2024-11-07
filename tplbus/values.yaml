@@ -8,10 +8,10 @@ image:
 env: 
     "ASPNETCORE_ENVIRONMENT": "Production"
     "ASPNETCORE_FORWARDEDHEADERS_ENABLED": "true"
-    "AzureServiceBusConfig_ConnectionString": "Endpoint=sb://<sb-namespace>.servicebus.windows.net/;SharedAccessKeyName=test-policy;SharedAccessKey=<shared-access-key>;EntityPath=test-topic"
+    "AzureServiceBusConfig_ConnectionString": ""
     "AzureServiceBusConfig_Topic": "test-topic"
     "AzureServiceBusConfig_Subscription": "S1"
-    "AzureServiceBusConfig_ReportInterval": 10
+    "AzureServiceBusConfig_ReportInterval": "10"
 
 service:
   type: ClusterIP
