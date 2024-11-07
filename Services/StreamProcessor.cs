@@ -26,14 +26,22 @@ namespace TplAzureServiceBusWorker.Services
             IServiceProvider services,
             IOptionsMonitor<AzureServiceBusConfig> config)
 		{
-            _logger = logger;
-            _services = services;
-            _config = config.CurrentValue;
-            _client = new ServiceBusClient(_config.ConnectionString);
-            _receiver = _client.CreateReceiver(_config.Topic, _config.Subscription);
+            try
+            {
+                _logger = logger;
+                _services = services;
+                _config = config.CurrentValue;
+                _client = new ServiceBusClient(_config.ConnectionString);
+                _receiver = _client.CreateReceiver(_config.Topic, _config.Subscription);
 
-            _sourceBlockLogger = _services.GetService<ILogger<ServiceBusSourceBlock>>() ?? throw new ArgumentNullException(nameof(ILogger<ServiceBusSourceBlock>));
-            _sinkBlockLogger = _services.GetService<ILogger<ServiceBusSinkBlock>>() ?? throw new ArgumentNullException(nameof(ILogger<ServiceBusSinkBlock>));
+                _sourceBlockLogger = _services.GetService<ILogger<ServiceBusSourceBlock>>() ?? throw new ArgumentNullException(nameof(ILogger<ServiceBusSourceBlock>));
+                _sinkBlockLogger = _services.GetService<ILogger<ServiceBusSinkBlock>>() ?? throw new ArgumentNullException(nameof(ILogger<ServiceBusSinkBlock>));
+            }
+            catch (Exception)
+            {
+                ServiceHealth.IsHealthy = false;
+                throw;
+            }
         }
 
         public async ValueTask DisposeAsync()
@@ -45,35 +53,43 @@ namespace TplAzureServiceBusWorker.Services
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            _sourceBlock = new(_sourceBlockLogger, _receiver, _config.ReportInterval, cancellationToken);
-            _logger.LogInformation("Starting the source block");
-            await _sourceBlock.StartAsync();
-
-            _sinkBlock = new(_sinkBlockLogger, _receiver, cancellationToken);
-            _logger.LogInformation("Starting the sink block");
-            await _sinkBlock.StartAsync();
-
-
-            var linkOptions = new DataflowLinkOptions
+            try
             {
-                PropagateCompletion = true
-            };
+                _sourceBlock = new(_sourceBlockLogger, _receiver, _config.ReportInterval, cancellationToken);
+                _logger.LogInformation("Starting the source block");
+                await _sourceBlock.StartAsync();
 
-            var standardBlockOptions = new ExecutionDataflowBlockOptions()
+                _sinkBlock = new(_sinkBlockLogger, _receiver, cancellationToken);
+                _logger.LogInformation("Starting the sink block");
+                await _sinkBlock.StartAsync();
+
+
+                var linkOptions = new DataflowLinkOptions
+                {
+                    PropagateCompletion = true
+                };
+
+                var standardBlockOptions = new ExecutionDataflowBlockOptions()
+                {
+                    CancellationToken = cancellationToken,
+                    BoundedCapacity = 10_000
+                };
+
+                var desFunc = DeserializeBodyHelper.MapPurchase();
+
+                var deserializeBlock =
+                    new TransformBlock<ServiceBusReceivedMessage, Tuple<ServiceBusReceivedMessage, Item?>>(desFunc, standardBlockOptions);
+
+                _sourceBlock.LinkTo(deserializeBlock, linkOptions);
+                deserializeBlock.LinkTo(_sinkBlock, linkOptions);
+
+                await Task.CompletedTask;
+            }
+            catch(Exception ex)
             {
-                CancellationToken = cancellationToken,
-                BoundedCapacity = 10_000
-            };
-
-            var desFunc = DeserializeBodyHelper.MapPurchase();
-
-            var deserializeBlock =
-                new TransformBlock<ServiceBusReceivedMessage, Tuple<ServiceBusReceivedMessage, Item?>> (desFunc, standardBlockOptions);
-
-            _sourceBlock.LinkTo(deserializeBlock, linkOptions);
-            deserializeBlock.LinkTo(_sinkBlock, linkOptions);
-
-            await Task.CompletedTask;
+                ServiceHealth.IsHealthy = false;
+                throw;
+            }
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
