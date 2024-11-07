@@ -20,8 +20,8 @@ namespace TplAzureServiceBusWorker.Services
 
         protected async override Task<HealthCheckResult> ExecuteAsync(CancellationToken stoppingToken)
         {
-            _httpListener.Prefixes.Add($"http://*:80/healthz/live");
-            _httpListener.Prefixes.Add($"http://*:80/healthz/ready");
+            _httpListener.Prefixes.Add($"http://*:80/healthz/live/");
+            _httpListener.Prefixes.Add($"http://*:80/healthz/ready/");
 
             _httpListener.Start();
             _logger.LogInformation($"Healthcheck listening...");
