@@ -39,20 +39,20 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
+              path: metrics/health
               port: http
           readinessProbe:
             httpGet:
-              path: /
+              path: metrics/health
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           # Environment variable section
           env:
-            {{- range $k, $v := .Values.env }}
-              - name: {{ $k | quote }}
-                value: {{ $v | quote }}
-            {{- end }}
+          {{- range $k, $v := .Values.env }}
+            - name: {{ $k | quote }}
+              value: {{ $v | quote }}
+          {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
