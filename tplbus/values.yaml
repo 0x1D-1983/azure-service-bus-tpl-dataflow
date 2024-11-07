@@ -8,10 +8,10 @@ image:
 env:
   "ASPNETCORE_ENVIRONMENT": "Production"
   "ASPNETCORE_FORWARDEDHEADERS_ENABLED": "true"
-  "AzureServiceBusConfig_ConnectionString": ""
-  "AzureServiceBusConfig_Topic": "test-topic"
-  "AzureServiceBusConfig_Subscription": "S1"
-  "AzureServiceBusConfig_ReportInterval": "10"
+  "AzureServiceBusConfig__ConnectionString": ""
+  "AzureServiceBusConfig__Topic": "test-topic"
+  "AzureServiceBusConfig__Subscription": "S1"
+  "AzureServiceBusConfig__ReportInterval": "10"
   
 service:
   type: ClusterIP
