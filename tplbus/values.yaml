@@ -1,9 +1,9 @@
 replicaCount: 1
 
 image:
-  repository: 0x1d1983/tplbus:0.2
+  repository: 0x1d1983/tplbus
   pullPolicy: IfNotPresent
-  tag: "latest"
+  tag: "0.2"
 
 env: 
     "ASPNETCORE_ENVIRONMENT": "Production"
