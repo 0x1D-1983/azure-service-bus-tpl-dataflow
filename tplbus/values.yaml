@@ -5,6 +5,14 @@ image:
   pullPolicy: IfNotPresent
   tag: "latest"
 
+env: 
+    "ASPNETCORE_ENVIRONMENT": "Production"
+    "ASPNETCORE_FORWARDEDHEADERS_ENABLED": "true"
+    "AzureServiceBusConfig_ConnectionString": "Endpoint=sb://<sb-namespace>.servicebus.windows.net/;SharedAccessKeyName=test-policy;SharedAccessKey=<shared-access-key>;EntityPath=test-topic"
+    "AzureServiceBusConfig_Topic": "test-topic"
+    "AzureServiceBusConfig_Subscription": "S1"
+    "AzureServiceBusConfig_ReportInterval": 10
+
 service:
   type: ClusterIP
   port: 80
