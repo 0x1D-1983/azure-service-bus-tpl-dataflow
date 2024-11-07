@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: 0x1d1983/tplbus
+  repository: 0x1d1983/tplbus:0.2
   pullPolicy: IfNotPresent
   tag: "latest"
 
