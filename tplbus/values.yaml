@@ -5,14 +5,14 @@ image:
   pullPolicy: IfNotPresent
   tag: "0.2"
 
-env: 
-    "ASPNETCORE_ENVIRONMENT": "Production"
-    "ASPNETCORE_FORWARDEDHEADERS_ENABLED": "true"
-    "AzureServiceBusConfig_ConnectionString": ""
-    "AzureServiceBusConfig_Topic": "test-topic"
-    "AzureServiceBusConfig_Subscription": "S1"
-    "AzureServiceBusConfig_ReportInterval": "10"
-
+env:
+  "ASPNETCORE_ENVIRONMENT": "Production"
+  "ASPNETCORE_FORWARDEDHEADERS_ENABLED": "true"
+  "AzureServiceBusConfig_ConnectionString": ""
+  "AzureServiceBusConfig_Topic": "test-topic"
+  "AzureServiceBusConfig_Subscription": "S1"
+  "AzureServiceBusConfig_ReportInterval": "10"
+  
 service:
   type: ClusterIP
   port: 80
